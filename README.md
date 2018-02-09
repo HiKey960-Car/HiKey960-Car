@@ -40,14 +40,13 @@ Of course, changes are needed, in particular;
 
 *You don't actually need to copy in that device and kernel, rather use the upstream device and kernel, and apply patches from these ones*.
 
-- NOW BUILD ANDROID LIKE THIS:
-. build/envsetup.sh
-lunch 32
-m -j9 Launcher3
+- NOW BUILD ANDROID LIKE THIS:<br>
+. build/envsetup.sh<br>
+lunch 32<br>
+m -j9 Launcher3<br>
 m -j9
 
 - Follow instructions in this repository to set up SENSORS MEZZANINE: https://github.com/HiKey960-Car/hikey960_extras
-
 - Build and install THIS application (for AMFM radio): https://github.com/HiKey960-Car/AMFM_DMHD-1000
 - Build and install THIS application (for SWI programming): https://github.com/HiKey960-Car/SWI
 
