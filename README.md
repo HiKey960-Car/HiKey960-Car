@@ -17,6 +17,10 @@ I use a 7" chalkboard from the first link. I have also tested with the alternati
 
 In general, you can use any monitor that you like, HOWEVER, the HiKey960 board is *not quite* able to reproduce the standard HDMI timings, so monitors that are extremely sensitive may not work with it.
 
+# The Prototype
+
+![prototype image](https://raw.githubusercontent.com/HiKey960-Car/HiKey960-Car/master/hikey960_ivi_prototype.jpg)
+
 # Features
 Well, this is a general purpose computer that runs Android that is built into your car dashboard. It does *everything* that any other car radio can do, and *everything* that every other car radio PROMISES to do (even if they can't). It is an HFP client for phone calls, it runs mapping software, plays music, opens spreadsheets, whatever you can imagine.
 
