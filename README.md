@@ -51,3 +51,9 @@ m -j9
 - Build and install THIS application (for AMFM radio): https://github.com/HiKey960-Car/AMFM_DMHD-1000
 
 In the future, AMFM radio control will be moved into a broadcast radio HAL. That application is only temporary to get the system "fully functional" as quickly as possible.
+
+# Work in progress
+Currently working on DMHD1000 HAL to replace the android application.
+Can be found here: https://github.com/HiKey960-Car/android_device_linaro_hikey/tree/dmhd1000
+It compiles.
+It has not been tested AT ALL.
