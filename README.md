@@ -30,6 +30,7 @@ The project has progressed to a point where it can be used comfortably for daily
 - The SBC does not go into deep sleep when the ACC turns off, rather it powers off entirely. Intention is to make it deep sleep, but for now, it boots in 30 seconds flat, so it isn't all that terrible.
 - The AMFM radio works exclusively through a custom application that opens the serial hardware directly, it does not have a proper broadcast radio HAL. One will be written in the near future.
 - There are some software bugs that upstream is working on, some graphical artifacts may be visible from time to time.
+- Selinux is currently set to PERMISSIVE. Work on selinux will come later once main features are all smoothed out.
 
 # How to build Android for this project
 Read this: https://source.android.com/setup/devices
@@ -48,6 +49,5 @@ m -j9
 
 - Follow instructions in this repository to set up SENSORS MEZZANINE: https://github.com/HiKey960-Car/hikey960_extras
 - Build and install THIS application (for AMFM radio): https://github.com/HiKey960-Car/AMFM_DMHD-1000
-- Build and install THIS application (for SWI programming): https://github.com/HiKey960-Car/SWI
 
-Both of the last 2 applications will be removed in the future. AMFM radio will be served by the AOSP Radio application, the SWI program will be moved to the device tree.
+In the future, AMFM radio control will be moved into a broadcast radio HAL. That application is only temporary to get the system "fully functional" as quickly as possible.
