@@ -26,7 +26,6 @@ Well, this is a general purpose computer that runs Android that is built into yo
 
 # Limitations
 The project has progressed to a point where it can be used comfortably for daily usage. There are, however, some things that have not been quite completed to the most ideal end goals;
-- HFP client is operating at 8 kHz (narrow band voice). This will be expanded to 16 kHz in the near future.
 - The SBC does not go into deep sleep when the ACC turns off, rather it powers off entirely. Intention is to make it deep sleep, but for now, it boots in 30 seconds flat, so it isn't all that terrible.
 - There are some software bugs that upstream is working on, some graphical artifacts may be visible from time to time.
 - Selinux is currently set to PERMISSIVE. Work on selinux will come later once main features are all smoothed out.
@@ -36,7 +35,6 @@ Read this: https://source.android.com/setup/devices
 Of course, changes are needed, in particular;
 - Device tree from here: https://github.com/HiKey960-Car/android_device_linaro_hikey
 - Kernel from here: https://github.com/HiKey960-Car/android_kernel_linaro_hikey
-- Edit here to read “AT+BAC=1\r”: https://android.googlesource.com/platform/system/bt/+/master/bta/hf_client/bta_hf_client_at.cc#1650
 - Apply this patch to packages/apps/Car/Radio/ : https://gist.github.com/lbdroid/f1e0cb32cc28e0eb5acb9513fa046eda
 
 *You don't actually need to copy in that device and kernel, rather use the upstream device and kernel, and apply patches from these ones*.
