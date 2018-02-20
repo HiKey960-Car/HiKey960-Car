@@ -35,7 +35,7 @@ Read this: https://source.android.com/setup/devices
 Of course, changes are needed, in particular;
 - Device tree from here: https://github.com/HiKey960-Car/android_device_linaro_hikey
 - Kernel from here: https://github.com/HiKey960-Car/android_kernel_linaro_hikey
-- Apply this patch to packages/apps/Car/Radio/ : https://gist.github.com/lbdroid/f1e0cb32cc28e0eb5acb9513fa046eda
+- Apply both patches from the /patches/ path of this repository
 
 *You don't actually need to copy in that device and kernel, rather use the upstream device and kernel, and apply patches from these ones*.
 

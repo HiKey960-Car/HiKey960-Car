@@ -1,0 +1,65 @@
+From f35e142e6d8b22c3940315fb0d4c09cebb0d231c Mon Sep 17 00:00:00 2001
+From: Adam Serbinski <adam@serbinski.com>
+Date: Tue, 20 Feb 2018 14:20:33 -0500
+Subject: [PATCH] Hack to instruct audio hal to turn broadcast radio playback
+ on/off
+
+Change-Id: I73d4e0747bd38f56c5f371e8fdbdb250596f5a16
+---
+ AndroidManifest.xml                         | 1 +
+ src/com/android/car/radio/RadioService.java | 6 +++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/AndroidManifest.xml b/AndroidManifest.xml
+index fea3fbf..eae3f72 100644
+--- a/AndroidManifest.xml
++++ b/AndroidManifest.xml
+@@ -26,6 +26,7 @@
+     <uses-permission android:name="android.car.permission.CAR_RADIO" />
+     <uses-permission android:name="android.permission.ACCESS_BROADCAST_RADIO" />
+     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
++    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+ 
+     <application android:label="@string/app_name"
+         android:icon="@drawable/logo_fm_radio"
+diff --git a/src/com/android/car/radio/RadioService.java b/src/com/android/car/radio/RadioService.java
+index 9e35faa..254436c 100644
+--- a/src/com/android/car/radio/RadioService.java
++++ b/src/com/android/car/radio/RadioService.java
+@@ -346,6 +346,7 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
+         try {
+             status = mCarAudioManager.requestAudioFocus(this, mRadioAudioAttributes,
+                     AudioManager.AUDIOFOCUS_GAIN, 0);
++            ((AudioManager)getSystemService(Context.AUDIO_SERVICE)).setParameters("line_in_ctl=play");
+         } catch (CarNotConnectedException e) {
+             Log.e(TAG, "requestAudioFocus() failed", e);
+         }
+@@ -382,6 +383,7 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
+ 
+         mCarAudioManager.abandonAudioFocus(this, mRadioAudioAttributes);
+         mHasAudioFocus = false;
++        ((AudioManager)getSystemService(Context.AUDIO_SERVICE)).setParameters("line_in_ctl=stop");
+ 
+         for (IRadioCallback callback : mRadioTunerCallbacks) {
+             try {
+@@ -571,7 +573,7 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
+ 
+             try {
+                 muteSuccessful = mCarAudioManager.setMediaMute(true);
+-
++		((AudioManager)getSystemService(Context.AUDIO_SERVICE)).setParameters("line_in_ctl=stop");
+                 if (Log.isLoggable(TAG, Log.DEBUG)) {
+                     Log.d(TAG, "setMediaMute(true) status: " + muteSuccessful);
+                 }
+@@ -611,6 +613,8 @@ public class RadioService extends Service implements AudioManager.OnAudioFocusCh
+                 return false;
+             }
+ 
++            ((AudioManager)getSystemService(Context.AUDIO_SERVICE)).setParameters("line_in_ctl=play");
++
+             // Requesting audio focus will automatically un-mute the radio if it had been muted.
+             return requestAudioFocus() == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+         }
+-- 
+2.9.3
+

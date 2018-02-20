@@ -1,0 +1,57 @@
+From b072a13ec1beac8b5b4617feb3767815e71a31e0 Mon Sep 17 00:00:00 2001
+From: Adam Serbinski <adam@serbinski.com>
+Date: Tue, 20 Feb 2018 14:18:28 -0500
+Subject: [PATCH] Hack for sending broadcast radio volume controls to audio hal
+
+Change-Id: I2fddd8a2b274e6e7bc9f6781227acd58324e9d9b
+---
+ .../core/java/com/android/server/audio/AudioService.java     | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/services/core/java/com/android/server/audio/AudioService.java b/services/core/java/com/android/server/audio/AudioService.java
+index 5eb2a8d..bb31bb6 100644
+--- a/services/core/java/com/android/server/audio/AudioService.java
++++ b/services/core/java/com/android/server/audio/AudioService.java
+@@ -3906,7 +3906,11 @@ public class AudioService extends IAudioService.Stub
+                     return AudioSystem.STREAM_VOICE_CALL;
+                 }
+             } else if (suggestedStreamType == AudioManager.USE_DEFAULT_STREAM_TYPE) {
+-                if (isAfMusicActiveRecently(sStreamOverrideDelayMs)) {
++                if (SystemProperties.getBoolean("service.broadcastradio.on", false)){
++                    if (DEBUG_VOL)
++                        Log.v(TAG, "getActiveStreamType: Forcing STREAM_MUSIC stream active because AMFM radio");
++                    return AudioSystem.STREAM_MUSIC;
++                } else if (isAfMusicActiveRecently(sStreamOverrideDelayMs)) {
+                     if (DEBUG_VOL)
+                         Log.v(TAG, "getActiveStreamType: Forcing STREAM_MUSIC stream active");
+                     return AudioSystem.STREAM_MUSIC;
+@@ -4343,6 +4347,8 @@ public class AudioService extends IAudioService.Stub
+             } else {
+                 index = (getIndex(device) + 5)/10;
+             }
++            if (mStreamType == AudioSystem.STREAM_MUSIC)
++                AudioSystem.setParameters("broadcastradio_volume="+index);
+             AudioSystem.setStreamVolumeIndex(mStreamType, index, device);
+         }
+ 
+@@ -4363,6 +4369,8 @@ public class AudioService extends IAudioService.Stub
+                         } else {
+                             index = (mIndexMap.valueAt(i) + 5)/10;
+                         }
++                        if (mStreamType == AudioSystem.STREAM_MUSIC)
++                            AudioSystem.setParameters("broadcastradio_volume="+index);
+                         AudioSystem.setStreamVolumeIndex(mStreamType, index, device);
+                     }
+                 }
+@@ -4373,6 +4381,8 @@ public class AudioService extends IAudioService.Stub
+                 } else {
+                     index = (getIndex(AudioSystem.DEVICE_OUT_DEFAULT) + 5)/10;
+                 }
++                if (mStreamType == AudioSystem.STREAM_MUSIC)
++                    AudioSystem.setParameters("broadcastradio_volume="+index);
+                 AudioSystem.setStreamVolumeIndex(
+                         mStreamType, index, AudioSystem.DEVICE_OUT_DEFAULT);
+             }
+-- 
+2.9.3
+
