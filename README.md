@@ -46,3 +46,12 @@ m -j9 Launcher3<br>
 m -j9
 
 - Follow instructions in this repository to set up SENSORS MEZZANINE: https://github.com/HiKey960-Car/hikey960_extras
+
+# Recommended add-on applications
+- uG "nogapps" GmsCore
+- uG "nogapps" GsfProxy
+- uG "nogapps" BlankStore
+- F-Droid repository
+
+https://github.com/microg/android_packages_apps_GmsCore/wiki/Downloads<br>
+https://f-droid.org/en/
