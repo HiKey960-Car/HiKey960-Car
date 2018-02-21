@@ -1,0 +1,119 @@
+From 0b802baa55ec9cdb4464fa536e4bddfa041df28c Mon Sep 17 00:00:00 2001
+From: Adam Serbinski <adam@serbinski.com>
+Date: Tue, 20 Feb 2018 16:01:48 -0500
+Subject: [PATCH] uG nogapps signature patch
+
+Change-Id: I21cfc99e49e8aa4089542c559277d835170fe1c5
+---
+ core/res/AndroidManifest.xml                       |  7 +++++++
+ core/res/res/values/config.xml                     |  2 ++
+ core/res/res/values/strings.xml                    |  5 +++++
+ .../java/com/android/server/ServiceWatcher.java    |  3 +--
+ .../android/server/pm/PackageManagerService.java   | 23 ++++++++++++++++++++--
+ 5 files changed, 36 insertions(+), 4 deletions(-)
+
+diff --git a/core/res/AndroidManifest.xml b/core/res/AndroidManifest.xml
+index 9072960..ff2431b 100644
+--- a/core/res/AndroidManifest.xml
++++ b/core/res/AndroidManifest.xml
+@@ -2152,6 +2152,13 @@
+         android:description="@string/permdesc_getPackageSize"
+         android:protectionLevel="normal" />
+ 
++    <!-- @hide Allows an application to change the package signature as
++         seen by applications -->
++    <permission android:name="android.permission.FAKE_PACKAGE_SIGNATURE"
++        android:protectionLevel="dangerous"
++        android:label="@string/permlab_fakePackageSignature"
++        android:description="@string/permdesc_fakePackageSignature" />
++
+     <!-- @deprecated No longer useful, see
+          {@link android.content.pm.PackageManager#addPackageToPreferred}
+          for details. -->
+diff --git a/core/res/res/values/config.xml b/core/res/res/values/config.xml
+index 15fd34d..7595b44 100644
+--- a/core/res/res/values/config.xml
++++ b/core/res/res/values/config.xml
+@@ -1506,6 +1506,8 @@
+     <string-array name="config_locationProviderPackageNames" translatable="false">
+         <!-- The standard AOSP fused location provider -->
+         <item>com.android.location.fused</item>
++        <!-- The (faked) microg fused location provider -->
++        <item>com.google.android.gms</item>
+     </string-array>
+ 
+     <!-- This string array can be overriden to enable test location providers initially. -->
+diff --git a/core/res/res/values/strings.xml b/core/res/res/values/strings.xml
+index befebd9..8d2c304 100644
+--- a/core/res/res/values/strings.xml
++++ b/core/res/res/values/strings.xml
+@@ -715,6 +715,11 @@
+     <!--  Permissions -->
+ 
+     <!-- Title of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
++    <string name="permlab_fakePackageSignature">Spoof package signature</string>
++    <!-- Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
++    <string name="permdesc_fakePackageSignature">Allows the app to pretend to be a different app. Malicious applications might be able to use this to access private application data. Grant this permission with caution only!</string>
++
++    <!-- Title of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
+     <string name="permlab_statusBar">disable or modify status bar</string>
+     <!-- Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
+     <string name="permdesc_statusBar">Allows the app to disable the status bar or add and remove system icons.</string>
+diff --git a/services/core/java/com/android/server/ServiceWatcher.java b/services/core/java/com/android/server/ServiceWatcher.java
+index 2ff036b..9141db2 100644
+--- a/services/core/java/com/android/server/ServiceWatcher.java
++++ b/services/core/java/com/android/server/ServiceWatcher.java
+@@ -92,8 +92,7 @@ public class ServiceWatcher implements ServiceConnection {
+             String pkg = initialPackageNames.get(i);
+             try {
+                 HashSet<Signature> set = new HashSet<Signature>();
+-                Signature[] sigs = pm.getPackageInfo(pkg, PackageManager.MATCH_SYSTEM_ONLY
+-                        | PackageManager.GET_SIGNATURES).signatures;
++                Signature[] sigs = pm.getPackageInfo(pkg, PackageManager.GET_SIGNATURES).signatures;
+                 set.addAll(Arrays.asList(sigs));
+                 sigSets.add(set);
+             } catch (NameNotFoundException e) {
+diff --git a/services/core/java/com/android/server/pm/PackageManagerService.java b/services/core/java/com/android/server/pm/PackageManagerService.java
+index 920deb9..8385356 100644
+--- a/services/core/java/com/android/server/pm/PackageManagerService.java
++++ b/services/core/java/com/android/server/pm/PackageManagerService.java
+@@ -3860,8 +3860,9 @@ public class PackageManagerService extends IPackageManager.Stub
+             flags |= MATCH_ANY_USER;
+         }
+ 
+-        PackageInfo packageInfo = PackageParser.generatePackageInfo(p, gids, flags,
+-                ps.firstInstallTime, ps.lastUpdateTime, permissions, state, userId);
++        PackageInfo packageInfo = mayFakeSignature(p, PackageParser.generatePackageInfo(p, gids, flags,
++               ps.firstInstallTime, ps.lastUpdateTime, permissions, state, userId),
++               permissions);
+ 
+         if (packageInfo == null) {
+             return null;
+@@ -3873,6 +3874,24 @@ public class PackageManagerService extends IPackageManager.Stub
+         return packageInfo;
+     }
+ 
++    private PackageInfo mayFakeSignature(PackageParser.Package p, PackageInfo pi,
++            Set<String> permissions) {
++        try {
++            if (permissions.contains("android.permission.FAKE_PACKAGE_SIGNATURE")
++                    && p.applicationInfo.targetSdkVersion > Build.VERSION_CODES.LOLLIPOP_MR1
++                    && p.mAppMetaData != null) {
++                String sig = p.mAppMetaData.getString("fake-signature");
++                if (sig != null) {
++                    pi.signatures = new Signature[] {new Signature(sig)};
++                }
++            }
++        } catch (Throwable t) {
++            // We should never die because of any failures, this is system code!
++            Log.w("PackageManagerService.FAKE_PACKAGE_SIGNATURE", t);
++        }
++        return pi;
++    }
++
+     @Override
+     public void checkPackageStartable(String packageName, int userId) {
+         final int callingUid = Binder.getCallingUid();
+-- 
+2.9.3
+
