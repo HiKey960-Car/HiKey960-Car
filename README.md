@@ -35,13 +35,13 @@ Read this: https://source.android.com/setup/devices
 Of course, changes are needed, in particular;
 - Device tree from here: https://github.com/HiKey960-Car/android_device_linaro_hikey
 - Kernel from here: https://github.com/HiKey960-Car/android_kernel_linaro_hikey
-- Apply both patches from the /patches/ path of this repository
+- Apply patches from the /patches/ path of this repository
 
 *You don't actually need to copy in that device and kernel, rather use the upstream device and kernel, and apply patches from these ones*.
 
 - NOW BUILD ANDROID LIKE THIS:<br>
 . build/envsetup.sh<br>
-lunch 32<br>
+lunch hikey960_car-userdebug<br>
 m -j9 Launcher3<br>
 m -j9
 
