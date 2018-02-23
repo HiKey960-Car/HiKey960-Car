@@ -55,3 +55,40 @@ m -j9
 
 https://github.com/microg/android_packages_apps_GmsCore/wiki/Downloads<br>
 https://f-droid.org/en/
+
+# Steering wheel interface wiring
+Parts needed:
+- 1 grove connector. Here are 10 for $11 (2 on each wire): https://www.amazon.ca/Quality-Universal-Wearproof-connectors-compatible/dp/B01H8Q8AFK
+- 2 1/4 watt 5% resistors. More on figuring out the size later.
+
+There are 4 color coded wires on each grove connector. Black and Red are GND and 5V respectively. White and yellow are "data". Your steering wheel will have 2 or 3 wires. Bank 1, Bank 2 (maybe), and common.<br>
+<br>
+Hook up the common wire to BLACK on the grove. Hook up Bank 1 and Bank 2 to YELLOW and WHITE -- it doesn't matter which. Hook up one resistor from RED to YELLOW, hook up the second resistor from RED to WHITE.<br>
+<br>
+Plug the grove connector into position A0 on the sensors mezzanine.<br>
+<br>
+Your wiring is complete.<br>
+<br>
+*Determining the resistor size*<br>
+<br>
+The ADC's read voltage. You will be feeding it a voltage in the range of 0-5V. It will read 5V when the switches are all in the OFF position. When you push buttons, it will lower the voltage. You need to pick resistors that will allow the voltages to be spread out best over the range, but without getting too close to 5V where it won't read at all.<br>
+<br>
+First step is to measure the resistance of all the buttons on both banks. Write down the readings on the highest and the lowest.<br>
+<br>
+Pick a number that is right in the middle of them.<br>
+<br>
+My steering wheel has resistance in the range of 330-3200 ohms.<br>
+Half way between them is ((3200 - 330) / 2) + 330 = 1765 ohms.<br>
+<br>
+That's what you're going for, as close as you can get to 1765 ohms, or whatever yours comes out to be.<br>
+<br>
+It does NOT have to be dead-on. Just get something reasonably close. For mine, 1.5k or 1.6k or 2.0k or 2.2k (very very common) would all be fine.<br>
+<br>
+*Explanation:*<br>
+The formula is Vout = Vin * (R2 / (R1 + R2))<br>
+We measure Vout<br>
+Vin = 5.0V<br>
+R2 is the resistor you are adding<br>
+R1 is the button<br>
+<br>
+If R1 == R2, then Vout = 2.5V. Right in the middle of the range that we can read. So we pick R1 to be right in the middle in order to spread the readings out as much as possible.
