@@ -28,7 +28,6 @@ Well, this is a general purpose computer that runs Android that is built into yo
 The project has progressed to a point where it can be used comfortably for daily usage. There are, however, some things that have not been quite completed to the most ideal end goals;
 - The SBC does not go into deep sleep when the ACC turns off, rather it powers off entirely. Intention is to make it deep sleep, but for now, it boots in 30 seconds flat, so it isn't all that terrible.
 - There are some software bugs that upstream is working on, some graphical artifacts may be visible from time to time.
-- Selinux is currently set to PERMISSIVE. Work on selinux will come later once main features are all smoothed out.
 
 # How to build Android for this project
 Read this: https://source.android.com/setup/devices
