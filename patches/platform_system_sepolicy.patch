@@ -1,0 +1,25 @@
+From 6e39358b806c7e0526cdf9f7a468eaac59d66902 Mon Sep 17 00:00:00 2001
+From: Adam Serbinski <adam@serbinski.com>
+Date: Mon, 5 Mar 2018 18:48:10 -0500
+Subject: [PATCH] Allow gnss hal to access internet
+
+Change-Id: I20e9a8d387d560823ead6ee8f587f8187fb6a076
+---
+ public/hal_neverallows.te | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/public/hal_neverallows.te b/public/hal_neverallows.te
+index c866bae..a953b84 100644
+--- a/public/hal_neverallows.te
++++ b/public/hal_neverallows.te
+@@ -16,6 +16,7 @@ neverallow {
+   -hal_wifi_server
+   -hal_wifi_supplicant_server
+   -rild
++  -hal_gnss
+ } domain:{ tcp_socket udp_socket rawip_socket } *;
+ 
+ ###
+-- 
+2.9.3
+

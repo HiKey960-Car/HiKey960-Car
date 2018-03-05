@@ -1,0 +1,23 @@
+From 9306f8d1e3b738c7037e4da497eefe3639fe76e3 Mon Sep 17 00:00:00 2001
+From: Adam <adam.s@dine.to>
+Date: Mon, 5 Mar 2018 18:47:12 -0500
+Subject: [PATCH] Add inet group to gnss
+
+Change-Id: Idd5b191f1b05cbe41303d04f0454972887376c33
+---
+ gnss/1.0/default/android.hardware.gnss@1.0-service.rc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gnss/1.0/default/android.hardware.gnss@1.0-service.rc b/gnss/1.0/default/android.hardware.gnss@1.0-service.rc
+index e629955..ac24027 100644
+--- a/gnss/1.0/default/android.hardware.gnss@1.0-service.rc
++++ b/gnss/1.0/default/android.hardware.gnss@1.0-service.rc
+@@ -1,4 +1,4 @@
+ service gnss_service /vendor/bin/hw/android.hardware.gnss@1.0-service
+     class hal
+     user gps
+-    group system gps radio
++    group system gps radio inet
+-- 
+2.9.3
+

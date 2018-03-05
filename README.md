@@ -41,8 +41,9 @@ Of course, changes are needed, in particular;
 - NOW BUILD ANDROID LIKE THIS:<br>
 . build/envsetup.sh<br>
 lunch hikey960_car-userdebug<br>
-m -j9 Launcher3<br>
-m -j9
+[UBLOX_GPS_HAL=TRUE] m -j9 Launcher3<br>
+[UBLOX_GPS_HAL=TRUE] m -j9<br>
+*note: set variable UBLOX_GPS_HAL=TRUE to enable Ublox-specific GPS hal.*
 
 - Follow instructions in this repository to set up SENSORS MEZZANINE: https://github.com/HiKey960-Car/hikey960_extras
 
