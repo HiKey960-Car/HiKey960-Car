@@ -44,7 +44,7 @@ lunch hikey960_car-userdebug<br>
 [UBLOX_GPS_HAL=TRUE] [HDMI_RES="{mode}"] m -j9 Launcher3<br>
 [UBLOX_GPS_HAL=TRUE] [HDMI_RES="{mode}"] m -j9<br>
 *note: set variable UBLOX_GPS_HAL=TRUE to enable Ublox-specific GPS hal.*
-*note: {mode} should be something along the lines of 1280x600@60 or 1024x600@70, etc.
+*note: {mode} should be something along the lines of 1280x600@60 or 1024x600@70, etc.*
 
 - Follow instructions in this repository to set up SENSORS MEZZANINE: https://github.com/HiKey960-Car/hikey960_extras
 
@@ -93,3 +93,56 @@ R2 is the resistor you are adding<br>
 R1 is the button<br>
 <br>
 If R1 == R2, then Vout = 2.5V. Right in the middle of the range that we can read. So we pick R1 to be right in the middle in order to spread the readings out as much as possible.
+
+# Dash Camera
+Parts needed:<br>
+*One or more USB video cameras that conform to USB Video Class.*<br><br>
+My recommendation would be WIDE ANGLE lenses, like 170-180 degree "fisheye". Preferably the primary (front?) camera should have native h264 encoding capability. Additional cameras should support MJPEG.<br>
+My personal preference is for OPEN CIRCUIT BOARD cameras, which can be screwed in to the front facing side of the rear-view mirror to avoid interfering with your view.<br>
+Here is an example of a highly suitable camera; https://www.amazon.ca/ELP-Webcams-Surveillance-Customized-fisheye/dp/B0196BPZ1C<br>
+<br>
+If the camera has a built-in microphone, it can also support *audio capture*.<br>
+<br>
+Software:<br>
+*ffmpeg*<br><br>
+You will need to install a suitable STATIC or ANDROID build of ffmpeg, build it yourself if you feel like it, or use the officially supported static linux build available here;<br>
+https://www.ffmpeg.org/download.html#build-linux<br>
+Note: You will need the ARM64 build.<br>
+Extract the archive, push the ffmpeg binary to /system/bin/, and chmod 755 it.<br>
+<br>
+Camera setup:<br>
+Plug in your Camera(s) to your USB hub.<br>
+Note: It is important that your USB topology must remain static once the software setup is complete. The software will identify specific cameras based on the physical path of the devices.<br>
+<br>
+Once the cameras are plugged in (actually plug them in one at a time so that you know which one is which), look at the symlink targets in the path /sys/class/video4linux/<br>
+Each entry will look something like this;<br>
+video1 -> ../../devices/platform/soc/ff200000.hisi_usb/ff100000.dwc3/xhci-hcd.0.auto/usb1/1-1/1-1.2/1-1.2.1/1-1.2.1.4/1-1.2.1.4:1.0/video4linux/video1<br>
+You need to select the final sub-path before /video4linux. In this case, you are looking for "/1-1.2.1.4:1.0/". You need that specific string, including the leading and trailing "/".<br>
+<br>
+The camera daemon receives its configuration via system properties. It recognizes up to 4 cameras, and 1 sound card.<br>
+The properties are as follows;<br>
+persist.dashcam.enabled<br>
+persist.dashcam.X.path<br>
+persist.dashcam.X.params<br>
+persist.dashcam.X.sub<br>
+persist.dashcam.audio.path<br>
+Where X is one of front, rear, left, right. The only two that are mandatory are persist.dashcam.enabled and persist.dashcam.front.path<br>
+<br>
+To enable dashcam, run;<br>
+setprop persist.dashcam.enabled 1<br>
+<br>
+To enable front camera, run;<br>
+setprop persist.dashcam.front.path "/1-1.2.1.4:1.0/"<br>
+(update value to match YOUR topology)<br>
+<br>
+If you need to modify the parameters of the front camera, run;<br>
+setprop persist.dashcam.front.params "-input_format h264 -video_size 1280x720"<br>
+<br>
+Note that each camera could present more than one device. The suggested camera above for example, presents TWO. The first for RAW and MJPEG, the second for H264. If you need to select the second, use;<br>
+setprop persist.dashcam.front.sub 1<br>
+(the default/unset value is "0" for the first camera)<br>
+<br>
+Obtaining the audio path works exactly the same way, except you need to look in /sys/class/sound/, and you are looking only for links starting with "dsp".<br>
+<br>
+Once all parameters are set, reboot and it will begin recording.<br>
+
