@@ -1,0 +1,28 @@
+From 6240acfd7bd7d05b2cc46593b79687cee7859ccc Mon Sep 17 00:00:00 2001
+From: Adam Serbinski <adam@serbinski.com>
+Date: Thu, 22 Mar 2018 16:05:22 -0400
+Subject: [PATCH] Temporary patch to comply with updated sepolicy requirements
+ until upstream fixes this.
+
+Change-Id: I9572ae787869611c2e7951dc273af24e23a915f8
+---
+ car_product/sepolicy/hal_vehicle_default.te | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/car_product/sepolicy/hal_vehicle_default.te b/car_product/sepolicy/hal_vehicle_default.te
+index dcae7a6..3d487a3 100644
+--- a/car_product/sepolicy/hal_vehicle_default.te
++++ b/car_product/sepolicy/hal_vehicle_default.te
+@@ -3,7 +3,7 @@ type hal_vehicle_default, domain;
+ hal_server_domain(hal_vehicle_default, hal_vehicle)
+ 
+ # may be started by init
+-type hal_vehicle_default_exec, exec_type, file_type;
++type hal_vehicle_default_exec, vendor_file_type, exec_type, file_type;
+ init_daemon_domain(hal_vehicle_default)
+ 
+ allow hal_vehicle_default car_service:service_manager { add };
+-- 
+2.9.3
+
+
