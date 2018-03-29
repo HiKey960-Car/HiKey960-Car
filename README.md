@@ -147,3 +147,9 @@ Obtaining the audio path works exactly the same way, except you need to look in 
 <br>
 Once all parameters are set, reboot and it will begin recording.<br>
 
+# RTC (Real Time Clock)
+The HiKey960 does have a built-in RTC, however, it unfortunately does not have a battery backup, and does not even remember its time after being rebooted (even if power is not disturbed). As a result, if the device will be operating standalone (i.e., without any connection to a network with access to predefined NTP servers), then it is necessary to add on a battery backed RTC. It can also be helpful during startup for a quicker GPS lock if you have it even with a fairly reliable network connection, or if there is a chance you will be driving somewhere that there may not be any cellular coverage.<br>
+<br>
+There is provision added for two RTC units, both of which are available with "grove" connectors (i.e., they are modules that plug in to the sensors mezzanine). These are DS1307 (available as "Seeed RTC"), and PCM85063 (available as "Seeed High Precision RTC"). I generally recommend the latter, not because it is high precision, but because it doesn't need to be *modified* in order to work. The DS1307 does not have enough pull to bring the data line below the "low" threshold unless you remove R1 and R2 from the board.<br>
+<br>
+Plug the modified DS1307 Seeed RTC into either of the I2S0 plugs (5V operating at 100 kHz), or plug the PCM85063 into either of the I2S1 plugs (3.3V operating at 400 kHz). Once booted and with a valid time, perform an initial RTC configuring by running the command "hwclock -w -u -f /dev/rtc1".
