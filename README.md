@@ -41,10 +41,11 @@ Of course, changes are needed, in particular;
 - NOW BUILD ANDROID LIKE THIS:<br>
 . build/envsetup.sh<br>
 lunch hikey960_car-userdebug<br>
-[UBLOX_GPS_HAL=TRUE] [HDMI_RES="{mode}"] m -j9 Launcher3<br>
-[UBLOX_GPS_HAL=TRUE] [HDMI_RES="{mode}"] m -j9<br>
-*note: set variable UBLOX_GPS_HAL=TRUE to enable Ublox-specific GPS hal.*
-*note: {mode} should be something along the lines of 1280x600@60 or 1024x600@70, etc.*
+[UBLOX_GPS_HAL=TRUE] [DMHD1000=TRUE] [HDMI_RES="{mode}"] m -j9 Launcher3<br>
+[UBLOX_GPS_HAL=TRUE] [DMHD1000=TRUE] [HDMI_RES="{mode}"] m -j9<br>
+*note: set variable UBLOX_GPS_HAL=TRUE to enable Ublox-specific GPS hal.*<br>
+*note: {mode} should be something along the lines of 1280x600@60 or 1024x600@70, etc.*<br>
+*note: set variable DMHD1000=TRUE to enable AMFM Radio HAL for DMHD-1000
 
 - Follow instructions in this repository to set up SENSORS MEZZANINE: https://github.com/HiKey960-Car/hikey960_extras
 
