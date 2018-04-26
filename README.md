@@ -146,6 +146,8 @@ setprop persist.dashcam.front.sub 1<br>
 Obtaining the audio path works exactly the same way, except you need to look in /sys/class/sound/, and you are looking only for links starting with "dsp".<br>
 <br>
 Once all parameters are set, reboot and it will begin recording.<br>
+<br>
+Extra controls: some cameras have an eXtension Unit (XU) that can control additional features of the camera. Some camera drivers expose these additional controls through the v4l2 interface automatically, others expose them manually, or only through a custom application. Those through the v4l2 interface may require v4l2-ctl to manipulate. ELP cameras provide manual exposure of the controls for v4l2, or access through a custom application available at https://github.com/HiKey960-Car/external_elpuvc -- I will be adding an additional system property "persist.dashcam.X.extra to run a custom command prior to starting ffmpeg.<br>
 
 # RTC (Real Time Clock)
 The HiKey960 does have a built-in RTC, however, it unfortunately does not have a battery backup, and does not even remember its time after being rebooted (even if power is not disturbed). As a result, if the device will be operating standalone (i.e., without any connection to a network with access to predefined NTP servers), then it is necessary to add on a battery backed RTC. It can also be helpful during startup for a quicker GPS lock if you have it even with a fairly reliable network connection, or if there is a chance you will be driving somewhere that there may not be any cellular coverage.<br>
