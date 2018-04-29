@@ -147,7 +147,19 @@ Obtaining the audio path works exactly the same way, except you need to look in 
 <br>
 Once all parameters are set, reboot and it will begin recording.<br>
 <br>
-Extra controls: some cameras have an eXtension Unit (XU) that can control additional features of the camera. Some camera drivers expose these additional controls through the v4l2 interface automatically, others expose them manually, or only through a custom application. Those through the v4l2 interface may require v4l2-ctl to manipulate. ELP cameras provide manual exposure of the controls for v4l2, or access through a custom application available at https://github.com/HiKey960-Car/external_elpuvc -- I will be adding an additional system property "persist.dashcam.X.extra to run a custom command prior to starting ffmpeg.<br>
+Extra controls: some cameras have an eXtension Unit (XU) that can control additional features of the camera. Some camera drivers expose these additional controls through the v4l2 interface automatically, others expose them manually, or only through a custom application. Those through the v4l2 interface may require v4l2-ctl to manipulate. ELP cameras provide manual exposure of the controls for v4l2, or access through a custom application available at https://github.com/HiKey960-Car/external_elpuvc -- I will be adding an additional system property "persist.dashcam.X.extra to run a custom command prior to starting ffmpeg. Any instance of the character '$' in the propval will be replaced by the device path of the camera, i.e. "/dev/video0"<br>
+<br>
+Example 2-camera setup (front 1920x1080 h264, rear 1280x720 mjpeg):<br>
+[persist.dashcam.audio.path]: [/1-1.1.2:1.3/]<br>
+[persist.dashcam.enabled]: [1]<br>
+[persist.dashcam.front.extra]: [/system/bin/elpuvc --xuset-br 4000000 $]<br>
+[persist.dashcam.front.params]: [-input_format h264 -video_size 1920x1080]<br>
+[persist.dashcam.front.path]: [/1-1.1.2:1.0/]<br>
+[persist.dashcam.front.sub]: [1]<br>
+[persist.dashcam.rear.extra]: [/system/bin/elpuvc --xuset-mjb 5000000 $]<br>
+[persist.dashcam.rear.params]: [-input_format mjpeg -video_size 1280x720 -framerate 15]<br>
+[persist.dashcam.rear.path]: [/1-1.1.1.3:1.0/]<br>
+[persist.dashcam.rear.sub]: [0]<br>
 
 # RTC (Real Time Clock)
 The HiKey960 does have a built-in RTC, however, it unfortunately does not have a battery backup, and does not even remember its time after being rebooted (even if power is not disturbed). As a result, if the device will be operating standalone (i.e., without any connection to a network with access to predefined NTP servers), then it is necessary to add on a battery backed RTC. It can also be helpful during startup for a quicker GPS lock if you have it even with a fairly reliable network connection, or if there is a chance you will be driving somewhere that there may not be any cellular coverage.<br>
