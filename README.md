@@ -1,3 +1,6 @@
+# DO NOT USE THIS, FURTHER DEVELOPMENT HAS BEEN MOVED TO A NEW HOST: https://gitlab.com/HiKey960-Car
+
+
 # HiKey960-Car
 
 # Parts:
